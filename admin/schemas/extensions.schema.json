@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://b2030b.example/schemas/extensions.schema.json",
+  "title": "Extensions Policy",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "forceInstall": { "type": "array", "items": { "type": "string" } },
+    "forceDisable": { "type": "array", "items": { "type": "string" } },
+    "allowlistByIdOrSignature": { "type": "array", "items": { "type": "string" } },
+    "permissionCaps": { "type": "array", "items": { "type": "string" } },
+    "aiRiskScoringAtInstall": { "type": "boolean" },
+    "blockSideload": { "type": "boolean" },
+    "allowBlockingWebRequest": { "type": "boolean" }
+  }
+}

@@ -1,0 +1,31 @@
+# cargo-fuzz harness. NOT a member of the root workspace: libfuzzer-sys requires
+# the nightly toolchain and -Zsanitizer, which the offline CI sandbox lacks.
+# Run on a dedicated fuzz runner via the `fuzz` workflow:
+#   cargo +nightly fuzz run net_alpn -- -max_total_time=300
+[package]
+name = "b2030b-fuzz"
+version = "0.0.0"
+publish = false
+edition = "2021"
+
+[package.metadata]
+cargo-fuzz = true
+
+[dependencies]
+libfuzzer-sys = "0.4"
+arbitrary = { version = "1", features = ["derive"] }
+engine-net = { path = "../../engine/net" }
+redaction = { path = "../../ai/redaction" }
+mv4-host = { path = "../../extensions/mv4-host" }
+
+[[bin]]
+name = "net_alpn"
+path = "fuzz_targets/net_alpn.rs"
+test = false
+doc = false
+
+[[bin]]
+name = "redaction"
+path = "fuzz_targets/redaction.rs"
+test = false
+doc = false

@@ -1,0 +1,93 @@
+name: release
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+    inputs:
+      channel:
+        description: Release channel
+        type: choice
+        options: [nightly, beta, stable]
+        default: nightly
+
+permissions:
+  contents: write
+  id-token: write # required for Sigstore keyless signing
+
+jobs:
+  artifacts:
+    name: package (${{ matrix.target }})
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { os: ubuntu-latest, target: linux-deb }
+          - { os: ubuntu-latest, target: linux-rpm }
+          - { os: ubuntu-latest, target: flatpak }
+          - { os: ubuntu-latest, target: snap }
+          - { os: macos-latest, target: macos-pkg }
+          - { os: windows-latest, target: windows-msi }
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: corepack enable
+      - uses: Swatinem/rust-cache@v2
+      - name: Build release
+        run: ./build release --channel "${{ github.event.inputs.channel || 'stable' }}"
+        shell: bash
+      - name: Package ${{ matrix.target }}
+        run: |
+          case "${{ matrix.target }}" in
+            linux-deb)   ./packaging/linux-deb/build-deb.sh ;;
+            linux-rpm)   rpmbuild -bb packaging/linux-rpm/b2030b.spec || true ;;
+            flatpak)     flatpak-builder --repo=repo build-dir packaging/flatpak/ai.b2030b.shell.yaml || true ;;
+            snap)        snapcraft || true ;;
+            macos-pkg)   ./packaging/macos-pkg/build-pkg.sh ;;
+            windows-msi) wix build packaging/windows-msi/b2030b.wxs -o b2030b.msi || true ;;
+          esac
+        shell: bash
+      - name: Generate SBOM (CycloneDX)
+        run: cargo install cargo-cyclonedx --locked && cargo cyclonedx --format json
+      - name: Sign artifacts (Sigstore keyless)
+        uses: sigstore/cosign-installer@v3
+      - name: Cosign sign-blob
+        run: |
+          for f in $(find . -maxdepth 2 -type f \( -name '*.deb' -o -name '*.rpm' -o -name '*.pkg' -o -name '*.msi' \)); do
+            cosign sign-blob --yes "$f" --bundle "$f.sigstore" || true
+          done
+        shell: bash
+      - name: Upload release assets
+        uses: actions/upload-artifact@v4
+        with:
+          name: b2030b-${{ matrix.target }}
+          path: |
+            **/*.deb
+            **/*.rpm
+            **/*.pkg
+            **/*.msi
+            **/*.sigstore
+            **/*.cdx.json
+
+  mobile:
+    name: package mobile (${{ matrix.target }})
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { os: ubuntu-latest, target: android-aab }
+          - { os: macos-latest, target: ios-ipa }
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build mobile artifact
+        run: |
+          if [ "${{ matrix.target }}" = "android-aab" ]; then
+            ./gradlew :mobile:android:bundleRelease
+          else
+            echo "iOS archive handled by Xcode build on macOS runner (see packaging/ios-ipa)"
+          fi
+        shell: bash

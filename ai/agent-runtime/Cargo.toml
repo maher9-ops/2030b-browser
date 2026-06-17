@@ -1,0 +1,16 @@
+[package]
+name = "agent-runtime"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+description = "Supervised browser-as-agent runtime built on the Model Context Protocol (forward feature 9.2)"
+
+[lib]
+name = "agent_runtime"
+path = "src/lib.rs"
+
+[dependencies]
+engine-ipc = { path = "../../engine/ipc" }
+mcp-host = { path = "../mcp-host" }
+redaction = { path = "../redaction" }

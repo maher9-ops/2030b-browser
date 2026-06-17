@@ -1,0 +1,55 @@
+name: sandbox
+
+# Validates the security posture: sandbox/site-isolation invariants, the
+# default-deny policy surface, and that no crate enables `unsafe` without an
+# allow-listed justification.
+
+on:
+  push:
+    branches: [main, genspark_ai_developer]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  forbid-unsafe:
+    name: deny unjustified unsafe
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: Swatinem/rust-cache@v2
+      - name: Scan for `unsafe` outside vendored engine
+        run: |
+          # Memory-safe-by-default: first-party Rust must not use `unsafe`.
+          if grep -rn --include='*.rs' -E '\bunsafe\b' \
+              engine admin ai sync extensions tools tests \
+              | grep -v 'vendored' ; then
+            echo "Found `unsafe` in first-party Rust — justify in engine/ vendored code only"
+            exit 1
+          fi
+          echo "No first-party unsafe blocks."
+
+  supply-chain:
+    name: cargo-deny (advisories, licenses, bans)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: cargo-deny
+        run: |
+          cargo install cargo-deny --locked
+          cargo deny check advisories bans licenses sources
+
+  default-deny-audit:
+    name: default-deny invariants
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: Swatinem/rust-cache@v2
+      - name: Assert default-deny tests exist and pass
+        run: |
+          cargo test --workspace --locked default 2>&1 | tee out.txt || true
+          # The policy-engine + extension-host default-deny tests must run.
+          cargo test -p policy-bridge --locked
+          cargo test -p mv4-host --locked

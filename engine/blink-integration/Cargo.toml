@@ -1,0 +1,13 @@
+[package]
+name = "blink-integration"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+description = "Integration shim driving the vendored Blink renderer (site isolation, throttling, fingerprint, DRM, TEE)"
+
+[lib]
+name = "blink_integration"
+path = "src/lib.rs"
+
+[dependencies]

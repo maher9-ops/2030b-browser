@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- WiX Toolset v4 source for the Browser 2030B MSI. -->
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
+  <Package
+      Name="Browser 2030B"
+      Manufacturer="Browser 2030B Authors"
+      Version="0.1.0"
+      UpgradeCode="6f2c9b40-2030-4b2b-9a30-b2030b000001"
+      Scope="perMachine">
+
+    <MajorUpgrade DowngradeErrorMessage="A newer version of Browser 2030B is already installed." />
+    <MediaTemplate EmbedCab="yes" />
+
+    <StandardDirectory Id="ProgramFiles64Folder">
+      <Directory Id="INSTALLFOLDER" Name="Browser 2030B">
+        <Component Id="MainExecutable" Guid="*">
+          <File Id="b2030bExe" Source="target\release\b2030b.exe" KeyPath="yes" />
+        </Component>
+      </Directory>
+    </StandardDirectory>
+
+    <Feature Id="Main" Title="Browser 2030B" Level="1">
+      <ComponentRef Id="MainExecutable" />
+    </Feature>
+  </Package>
+</Wix>

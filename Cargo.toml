@@ -1,0 +1,70 @@
+# Browser 2030B — Rust workspace manifest
+# Codename: b2030b
+#
+# This is the root of the Cargo virtual workspace. All memory-safe engine,
+# networking, policy, IPC, AI runtime, and sync crates are members here.
+[workspace]
+resolver = "2"
+members = [
+    "engine/net",
+    "engine/ipc",
+    "engine/gpu",
+    "engine/storage",
+    "engine/v8-bindings",
+    "engine/spidermonkey-bindings",
+    "engine/blink-integration",
+    "engine/gecko-integration",
+    "admin/policy-engine",
+    "ai/agent-runtime",
+    "ai/mcp-host",
+    "ai/redaction",
+    "sync/server",
+    "sync/client",
+    "sync/e2ee",
+    "extensions/mv4-host",
+    "extensions/mv2-shim",
+    "extensions/mv3-host",
+    "extensions/policy-bridge",
+    "tools/policy-simulator",
+    "tests/integration",
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.82"
+# First-party b2030b crates are licensed under The Browser 2030B License v1.0
+# (B2030B-1.0), a source-available, ethical-source Derived License based on
+# Maher's License v1.1 (ML-1.1). NOT an OSI "open source" or FSF "free software"
+# license. SPDX uses the LicenseRef form (Exhibit 2). Derived License text:
+# LICENSE-Browser2030B-1.0.md. Base license: LICENSE-ML-1.1.md. Notice: LICENSE.
+license = "LicenseRef-Browser2030B-1.0"
+authors = ["Maher and the Browser 2030B contributors"]
+repository = "https://example.invalid/b2030b"
+
+[workspace.dependencies]
+# Async runtime
+tokio = { version = "1", features = ["full"] }
+futures = "0.3"
+# Serialization
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+# Errors / logging
+anyhow = "1"
+thiserror = "1"
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter", "json"] }
+# Crypto (post-quantum hybrid + classical)
+ed25519-dalek = "2"
+sha2 = "0.10"
+rand = "0.8"
+hex = "0.4"
+# JSON Schema validation for policy bundles
+jsonschema = "0.18"
+
+[profile.release]
+opt-level = 3
+lto = "thin"
+codegen-units = 1
+panic = "abort"
+strip = true

@@ -1,0 +1,13 @@
+[package]
+name = "engine-gpu"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+description = "GPU compositor, capture, and energy estimation for Browser 2030B"
+
+[lib]
+name = "engine_gpu"
+path = "src/lib.rs"
+
+[dependencies]

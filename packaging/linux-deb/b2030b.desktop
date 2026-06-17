@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=Browser 2030B
+GenericName=Web Browser
+Comment=Privacy-first, default-deny web browser
+Exec=b2030b %U
+Icon=b2030b
+Terminal=false
+Categories=Network;WebBrowser;
+MimeType=text/html;x-scheme-handler/https;x-scheme-handler/http;
+StartupNotify=true

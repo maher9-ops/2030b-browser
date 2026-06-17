@@ -1,0 +1,12 @@
+Package: b2030b
+Version: 0.1.0
+Section: web
+Priority: optional
+Architecture: amd64
+Maintainer: Browser 2030B Authors <maintainers@b2030b.invalid>
+Depends: libc6 (>= 2.34), libgtk-3-0, libwebkit2gtk-4.1-0
+Homepage: https://b2030b.invalid
+Description: Browser 2030B — privacy-first, default-deny web browser
+ A memory-safe, post-quantum-ready browser. Telemetry, network egress, AI
+ features, and site permissions are all default-deny and opt-in. Built from a
+ single monorepo with Rust engine components and a Tauri/TypeScript shell.

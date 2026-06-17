@@ -1,0 +1,24 @@
+[package]
+name = "policy-engine"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+description = "Administrative Configuration Plane for Browser 2030B: precedence resolution, schema validation, Rego evaluation, signed bundles"
+
+[[bin]]
+name = "policy-engine"
+path = "src/main.rs"
+
+[lib]
+name = "policy_engine"
+path = "src/lib.rs"
+
+[features]
+default = []
+# Real builds enable the embedded OPA Wasm runtime and ML-DSA signatures.
+opa-wasm = []
+ml-dsa = []
+
+[dependencies]
+engine-ipc = { path = "../../engine/ipc" }

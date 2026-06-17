@@ -1,0 +1,14 @@
+[package]
+name = "mv4-host"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+description = "Manifest V4 extension host with MV2/MV3 -> MV4 compatibility shim"
+
+[lib]
+name = "mv4_host"
+path = "src/lib.rs"
+
+[dependencies]
+engine-ipc = { path = "../../engine/ipc" }

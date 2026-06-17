@@ -1,0 +1,14 @@
+[package]
+name = "mv3-host"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+description = "MV3 compatibility host: parses MV3 manifests and maps to MV4 host"
+
+[lib]
+name = "mv3_host"
+path = "src/lib.rs"
+
+[dependencies]
+mv4-host = { path = "../mv4-host" }

@@ -1,0 +1,13 @@
+[package]
+name = "sync-server"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+description = "Self-hostable, zero-knowledge sync server reference implementation"
+
+[lib]
+name = "sync_server"
+path = "src/lib.rs"
+
+[dependencies]

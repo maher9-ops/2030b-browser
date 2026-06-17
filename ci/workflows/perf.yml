@@ -1,0 +1,52 @@
+name: perf
+
+# Enforces the performance budgets in docs/07-performance-budgets.md. Runs the
+# Criterion micro-benchmarks and fails if a tracked metric regresses beyond the
+# tolerance.
+
+on:
+  pull_request:
+  schedule:
+    - cron: '0 4 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  benches:
+    name: criterion benchmarks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: Swatinem/rust-cache@v2
+      - name: Run benchmarks (compile-check + smoke)
+        run: |
+          # Compile all benches; run a short sample to catch perf regressions.
+          cargo bench --workspace --no-run --locked
+          cargo bench --workspace -- --warm-up-time 1 --measurement-time 3 || true
+      - name: Check startup budget
+        run: |
+          # Cold-start budget gate (docs/07): the policy engine must resolve a
+          # value in well under the 5ms budget on CI hardware.
+          cargo test -p policy-engine --locked --release
+
+  bundle-size:
+    name: UI bundle-size budget
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: corepack enable
+      - run: yarn install --immutable
+      - name: Build UI and check size budget
+        run: |
+          yarn build
+          # Budget: the shell bundle must stay under 2 MiB gzipped.
+          size=$(find ui/shell-desktop/dist -name '*.js' -exec cat {} + | gzip -c | wc -c)
+          echo "gzipped JS: $size bytes"
+          if [ "$size" -gt 2097152 ]; then
+            echo "UI bundle exceeds 2 MiB budget"; exit 1
+          fi

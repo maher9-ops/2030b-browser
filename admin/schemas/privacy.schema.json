@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://b2030b.example/schemas/privacy.schema.json",
+  "title": "Privacy Policy",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "fingerprintRandomization": { "enum": ["off", "standard", "strict", "maximum"] },
+    "canvasNoise": { "type": "boolean" },
+    "audioNoise": { "type": "boolean" },
+    "fontEnumerationRestriction": { "type": "boolean" },
+    "referrerPolicy": {
+      "enum": ["no-referrer", "same-origin", "strict-origin", "strict-origin-when-cross-origin"]
+    },
+    "cookiePartitioningDepth": { "type": "integer", "minimum": 1 },
+    "storageQuotaMb": { "type": "integer", "minimum": 0 },
+    "telemetryGranularity": { "enum": ["off", "crash-only", "aggregate", "full"] }
+  }
+}

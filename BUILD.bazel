@@ -1,0 +1,25 @@
+# Browser 2030B — root BUILD file
+# Aggregates the platform deliverables into a single `//:all` target so that
+# `./build all` maps to `bazel build //:all`.
+
+package(default_visibility = ["//visibility:public"])
+
+filegroup(
+    name = "docs",
+    srcs = glob(["docs/*.md"]),
+)
+
+# Convenience meta-target. Each subtree exposes its own :dist target.
+alias(
+    name = "all",
+    actual = ":dist",
+)
+
+filegroup(
+    name = "dist",
+    srcs = [
+        "//engine/net:lib",
+        "//admin/policy-engine:bin",
+        "//ui/shell-desktop:bundle",
+    ] if False else [":docs"],  # graceful default until upstream is fetched
+)

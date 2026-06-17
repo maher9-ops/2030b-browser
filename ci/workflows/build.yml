@@ -1,0 +1,69 @@
+name: build
+
+on:
+  push:
+    branches: [main, genspark_ai_developer]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  monorepo:
+    name: ./bootstrap && ./build all (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: corepack enable
+      - uses: Swatinem/rust-cache@v2
+      - name: Bootstrap (no engine fetch in CI)
+        run: ./bootstrap --no-engine
+      - name: Build all
+        run: ./build all
+      - name: Run tests
+        run: ./build test
+
+  windows:
+    name: ./build all (windows, PowerShell)
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: corepack enable
+      - uses: Swatinem/rust-cache@v2
+      - name: Bootstrap
+        run: ./bootstrap.ps1 -NoEngine
+        shell: pwsh
+      - name: Build all
+        run: ./build.ps1 all
+        shell: pwsh
+
+  sbom:
+    name: CycloneDX SBOM
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: Swatinem/rust-cache@v2
+      - name: Generate SBOM
+        run: |
+          cargo install cargo-cyclonedx --locked
+          cargo cyclonedx --format json
+      - name: Upload SBOM
+        uses: actions/upload-artifact@v4
+        with:
+          name: sbom
+          path: '**/*.cdx.json'

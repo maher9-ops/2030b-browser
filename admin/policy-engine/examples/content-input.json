@@ -1,0 +1,6 @@
+{
+  "context": { "url": "https://malware.test/payload" },
+  "layers": [
+    { "layer": "enterprise", "content": { "urlBlocklist": ["**malware.test**"], "urlAllowlist": ["**"] } }
+  ]
+}

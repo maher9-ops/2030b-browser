@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://b2030b.example/schemas/ai-data.schema.json",
+  "title": "AI & Data Policy",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "allowedProviders": {
+      "type": "array",
+      "items": { "enum": ["local-only", "specific-cloud"] }
+    },
+    "allowedCloudEndpoints": { "type": "array", "items": { "type": "string", "format": "uri" } },
+    "dataResidency": { "enum": ["eu", "us", "apac", "sovereign"] },
+    "promptRedaction": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "pii": { "type": "boolean" },
+        "secrets": { "type": "boolean" },
+        "regexRules": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "noAiSites": { "type": "array", "items": { "type": "string" } },
+    "modelOutputLogging": { "enum": ["off", "metadata", "full"] }
+  }
+}

@@ -1,0 +1,33 @@
+# Low-memory Cargo build profile for constrained machines (e.g. 8 GB RAM laptops).
+#
+# This file is OPT-IN. It is NOT the repo default (a repo-wide low-mem profile
+# would slow CI and 16 GB+ dev machines). Copy it into place only on a machine
+# that struggles to link the workspace in release mode:
+#
+#   Windows : copy this to  %USERPROFILE%\.cargo\config.toml
+#   macOS/Linux : copy this to  ~/.cargo/config.toml
+#
+# Then build with the normal commands; cargo will pick it up automatically.
+# See docs/11-windows-build-guide.md §A for the full constrained-build recipe.
+
+[build]
+# Limit parallel codegen jobs so several memory-hungry linkers don't run at once.
+# Lower this to 1 for the very heaviest crates if you still OOM.
+jobs = 2
+
+[profile.release]
+# Thin LTO uses far less peak RAM than fat ("true") LTO.
+# Set to false for the absolute lowest memory use (slightly larger binary).
+lto = "thin"
+# More codegen units = lower peak RAM per unit (at the cost of some optimization).
+codegen-units = 16
+incremental = false
+# No debuginfo in release: smaller target/ (saves disk) and less linker RAM.
+debug = false
+# Smaller, faster-linking binaries.
+panic = "abort"
+
+[profile.dev]
+# Line-tables-only debug info keeps target/ small on a tight disk.
+# (debug = 2, the default, can balloon target/ by several GB.)
+debug = 1

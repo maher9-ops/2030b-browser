@@ -1,0 +1,25 @@
+app-id: ai.b2030b.shell
+runtime: org.gnome.Platform
+runtime-version: '46'
+sdk: org.gnome.Sdk
+command: b2030b
+
+# Default-deny sandbox: only the permissions strictly required to render.
+# Network, camera, mic, and location are requested dynamically via portals.
+finish-args:
+  - --socket=wayland
+  - --socket=fallback-x11
+  - --device=dri
+  - --share=ipc
+  # No --share=network here: egress is gated by the in-app default-deny policy
+  # and granted via the network portal only after user consent.
+
+modules:
+  - name: b2030b
+    buildsystem: simple
+    build-commands:
+      - install -Dm755 target/release/b2030b /app/bin/b2030b
+      - install -Dm644 packaging/linux-deb/b2030b.desktop /app/share/applications/ai.b2030b.shell.desktop
+    sources:
+      - type: dir
+        path: ../..

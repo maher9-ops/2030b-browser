@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://b2030b.example/schemas/compliance.schema.json",
+  "title": "Compliance Policy",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "frameworks": {
+      "type": "array",
+      "items": { "enum": ["gdpr", "ccpa", "hipaa", "soc2", "fedramp", "iso27001", "pcidss"] }
+    },
+    "auditLogExport": { "enum": ["off", "syslog", "json", "cef"] },
+    "tamperEvidentLog": { "const": true },
+    "publicLedgerAnchoring": { "type": "boolean" }
+  }
+}

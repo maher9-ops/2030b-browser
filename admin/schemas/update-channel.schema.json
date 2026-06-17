@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://b2030b.example/schemas/update-channel.schema.json",
+  "title": "Update & Channel Policy",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "channelPin": { "enum": ["stable", "beta", "dev", "canary", "esr"] },
+    "stagedRolloutPercent": { "type": "integer", "minimum": 0, "maximum": 100 },
+    "rollbackWindowHours": { "type": "integer", "minimum": 0 },
+    "signedUpdateEnforcement": { "const": true },
+    "offlineUpdateBundles": { "type": "boolean" },
+    "studiesEnabled": { "type": "boolean", "default": false },
+    "telemetryEnabled": { "type": "boolean", "default": false }
+  }
+}

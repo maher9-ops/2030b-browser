@@ -1,0 +1,8 @@
+{
+  "context": { "origin": "https://example.com", "data_residency": "eu" },
+  "layers": [
+    { "layer": "default" },
+    { "layer": "user", "network": { "doh": { "provider": "https://dns.google/dns-query" } } },
+    { "layer": "enterprise", "network": { "doh": { "provider": "https://dns.quad9.net/dns-query" } } }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://b2030b.example/schemas/security.schema.json",
+  "title": "Security Policy",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "sandboxStrictness": { "enum": ["standard", "strict", "maximum"] },
+    "jitlessOrigins": { "type": "array", "items": { "type": "string" } },
+    "v8Sandbox": { "type": "boolean" },
+    "cfiLevel": { "enum": ["off", "shadow-stack", "full"] },
+    "armMte": { "type": "boolean" },
+    "windowsHvci": { "type": "boolean" },
+    "secureDnsEnforcement": { "enum": ["off", "preferred", "required"] }
+  }
+}

@@ -1,0 +1,31 @@
+name: b2030b
+base: core24
+version: '0.1.0'
+summary: Browser 2030B — privacy-first, default-deny web browser
+description: |
+  A memory-safe, post-quantum-ready web browser. Telemetry, network egress, AI
+  features, and site permissions are all default-deny and opt-in.
+
+grade: stable
+confinement: strict
+
+apps:
+  b2030b:
+    command: bin/b2030b
+    extensions: [gnome]
+    plugs:
+      - browser-support
+      - opengl
+      - wayland
+      - x11
+      # `network` is connected but egress is still gated in-app by default-deny.
+      - network
+
+parts:
+  b2030b:
+    plugin: dump
+    source: ../..
+    organize:
+      target/release/b2030b: bin/b2030b
+    stage:
+      - bin/b2030b

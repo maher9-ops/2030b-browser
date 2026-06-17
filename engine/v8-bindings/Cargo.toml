@@ -1,0 +1,13 @@
+[package]
+name = "v8-bindings"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+description = "Rust FFI bindings to the V8 JavaScript engine (vendored)"
+
+[lib]
+name = "v8_bindings"
+path = "src/lib.rs"
+
+[dependencies]
