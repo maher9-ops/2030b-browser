@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://b2030b.example/schemas/identity.schema.json",
+  "title": "Identity & Profiles Policy",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "sso": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "protocol": { "enum": ["saml", "oidc"] },
+        "issuer": { "type": "string", "format": "uri" },
+        "scim": { "type": "boolean" }
+      }
+    },
+    "passkeyProvisioning": { "enum": ["disabled", "optional", "required"] },
+    "profileLockdown": { "type": "boolean" },
+    "dataResidency": { "enum": ["eu", "us", "apac", "sovereign"] }
+  }
+}

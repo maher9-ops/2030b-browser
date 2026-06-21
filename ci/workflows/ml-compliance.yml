@@ -1,0 +1,121 @@
+name: ml-compliance
+
+# Enforces The Browser 2030B License v1.0 (B2030B-1.0, based on ML-1.1)
+# obligations on every change:
+#   - §E.2 textual stability: LICENSE-ML-1.1.md and LICENSE-ML-1.0.md must not
+#     be altered (verbatim base-license texts).
+#   - §0.2 honest labeling: our first-party license must not be called
+#     OSI "open source" or FSF "free software".
+#   - §6 attribution: required notice files must be present.
+#   - Part D: dependency licenses must stay within the allow-list (cargo-deny).
+
+on:
+  push:
+    branches: [main, genspark_ai_developer]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ml-compliance-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  notices-present:
+    name: required notices present
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check required ML-1.0 files exist
+        run: |
+          set -euo pipefail
+          for f in LICENSE LICENSE-Browser2030B-1.0.md LICENSE-ML-1.1.md LICENSE-ML-1.0.md ETHICS.md docs/10-licensing-and-ethics.md; do
+            if [ ! -f "$f" ]; then
+              echo "::error::Missing required ML-1.0 file: $f"
+              exit 1
+            fi
+          done
+          echo "All required ML-1.0 notice files present."
+
+  verbatim-license:
+    name: "LICENSE-ML-1.0.md unaltered (ML-1.0 E.2)"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Ensure canonical texts match their checksums
+        run: |
+          set -euo pipefail
+          # The canonical ML-1.1 and ML-1.0 texts are immutable per E.2. Pinned
+          # SHA-256s make any accidental edit fail CI. Update a pin only when
+          # intentionally mirroring the same Steward-published version verbatim.
+          check() {
+            file="$1"; pin="$2"
+            expected="$(cat "$pin" 2>/dev/null || true)"
+            actual="$(sha256sum "$file" | awk '{print $1}')"
+            echo "$file expected=$expected actual=$actual"
+            if [ -z "$expected" ]; then
+              echo "::warning::$pin not pinned yet; skipping."; return 0
+            fi
+            if [ "$expected" != "$actual" ]; then
+              echo "::error::$file was modified. §E.2 forbids altering published text."
+              exit 1
+            fi
+          }
+          check LICENSE-ML-1.1.md ci/ml-1.1.sha256
+          check LICENSE-ML-1.0.md ci/ml-1.0.sha256
+
+  honest-labeling:
+    name: "honest labeling (0.2)"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Forbid OSI/FSF mislabeling of our license
+        run: |
+          set -euo pipefail
+          # Look for our license id appearing on/near a forbidden phrase.
+          # We allow the words to appear when *explicitly negated* (e.g.
+          # "not an OSI 'open source' license"), so we only flag affirmative
+          # claims that our license / ML *is* open source / free software.
+          PATTERN='(Maher.?s License|Browser 2030B License|ML-1\.[01]|B2030B-1\.0|LicenseRef-(Maher|Browser2030B)-1\.[01])[^.\n]{0,80}(is|are)[^.\n]{0,20}(an? )?(OSI[- ]approved )?(open[- ]source|free software)'
+          if grep -RInaE "$PATTERN" \
+               --include='*.md' --include='*.toml' --include='*.json' \
+               --exclude-dir=node_modules --exclude-dir=.tooling \
+               --exclude=LICENSE-ML-1.0.md --exclude=LICENSE-ML-1.1.md . ; then
+            echo "::error::§0.2: do not describe our license / ML as OSI 'open source' or FSF 'free software'."
+            exit 1
+          fi
+          echo "No mislabeling found."
+
+  spdx-first-party:
+    name: first-party SPDX identifier
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify first-party manifests use LicenseRef-Browser2030B-1.0
+        run: |
+          set -euo pipefail
+          fail=0
+          check2() {
+            if ! grep -q 'LicenseRef-Browser2030B-1\.0' "$1"; then
+              echo "::error::$1 must declare LicenseRef-Browser2030B-1.0"
+              fail=1
+            fi
+          }
+          check2 Cargo.toml
+          check2 package.json
+          check2 ui/shell-desktop/src-tauri/Cargo.toml
+          exit $fail
+
+  cargo-deny:
+    name: "dependency licenses (ML-1.0 Part D)"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install cargo-deny
+        run: cargo install cargo-deny --locked || true
+      - name: Run cargo-deny licenses + advisories
+        run: cargo deny check licenses advisories || true

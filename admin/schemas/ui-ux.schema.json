@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://b2030b.example/schemas/ui-ux.schema.json",
+  "title": "UI/UX Policy",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "hiddenToolbarElements": { "type": "array", "items": { "type": "string" } },
+    "lockTheme": { "type": "string" },
+    "forceVerticalTabs": { "type": "boolean" },
+    "enforceReaderModeSites": { "type": "array", "items": { "type": "string" } },
+    "defaultSearchEngine": { "type": "string" },
+    "lockDefaultSearchEngine": { "type": "boolean" },
+    "restrictNewTabPage": { "type": "string" }
+  }
+}

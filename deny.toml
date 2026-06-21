@@ -1,0 +1,46 @@
+# cargo-deny configuration (supply-chain gate; see ci/workflows/sandbox.yml).
+
+[advisories]
+version = 2
+yanked = "deny"
+
+[licenses]
+version = 2
+# First-party b2030b crates are licensed under The Browser 2030B License v1.0
+# (B2030B-1.0), expressed in SPDX as `LicenseRef-Browser2030B-1.0`. B2030B-1.0 is
+# a source-available, ethical-source Derived License based on Maher's License v1.1
+# (ML-1.1) (NOT OSI/FSF). See LICENSE-Browser2030B-1.0.md and LICENSE-ML-1.1.md.
+#
+# Third-party dependencies remain under their own upstream licenses. Per the
+# ML-1.1 Part D compatibility rubric, the permissive/copyleft licenses below are
+# "ML-Conditionally-Compatible" (they are silent on the Ethical-Use Conditions
+# in Part C, which the b2030b distribution layers on as a non-severable floor).
+# See docs/10-licensing-and-ethics.md for the per-license determination.
+allow = [
+    "LicenseRef-Browser2030B-1.0",
+    "MPL-2.0",
+    "Apache-2.0",
+    "MIT",
+    "BSD-2-Clause",
+    "BSD-3-Clause",
+    "ISC",
+    "Unicode-DFS-2016",
+    "Zlib",
+]
+confidence-threshold = 0.9
+
+# Clarify the SPDX expression for our own first-party crates so cargo-deny does
+# not attempt to resolve the LicenseRef against its built-in license database.
+[[licenses.clarify]]
+crate = "b2030b-shell-desktop"
+expression = "LicenseRef-Browser2030B-1.0"
+license-files = []
+
+[bans]
+multiple-versions = "warn"
+wildcards = "deny"
+
+[sources]
+unknown-registry = "deny"
+unknown-git = "deny"
+allow-registry = ["https://github.com/rust-lang/crates.io-index"]

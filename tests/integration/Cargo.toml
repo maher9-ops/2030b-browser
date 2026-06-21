@@ -1,0 +1,20 @@
+[package]
+name = "b2030b-integration-tests"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+description = "Cross-crate integration tests for Browser 2030B"
+publish = false
+
+[lib]
+name = "b2030b_integration_tests"
+path = "src/lib.rs"
+
+[dev-dependencies]
+engine-net = { path = "../../engine/net" }
+engine-ipc = { path = "../../engine/ipc" }
+policy-engine = { path = "../../admin/policy-engine" }
+mv4-host = { path = "../../extensions/mv4-host" }
+policy-bridge = { path = "../../extensions/policy-bridge" }
+redaction = { path = "../../ai/redaction" }

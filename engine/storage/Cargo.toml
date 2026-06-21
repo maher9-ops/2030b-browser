@@ -1,0 +1,13 @@
+[package]
+name = "engine-storage"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+description = "Profile storage, semantic history, site settings, and memory saver for Browser 2030B"
+
+[lib]
+name = "engine_storage"
+path = "src/lib.rs"
+
+[dependencies]

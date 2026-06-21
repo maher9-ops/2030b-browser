@@ -1,0 +1,17 @@
+/* Minimal shell styling. Real theming lives in ui/themes/ (design tokens). */
+:root {
+  color-scheme: light dark;
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+}
+
+body {
+  margin: 0;
+  background: var(--b2030b-bg, Canvas);
+  color: var(--b2030b-fg, CanvasText);
+}
+
+#status {
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  opacity: 0.85;
+}

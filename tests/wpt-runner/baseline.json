@@ -1,0 +1,5 @@
+{
+  "_comment": "Placeholder WPT baseline. Replaced by the first real run via run-wpt.sh on a runner with a built engine binary. compare-baseline.sh reads pass rate from `results[].subtests[].status`.",
+  "run_info": { "product": "b2030b", "revision": "0000000000000000000000000000000000000000" },
+  "results": []
+}

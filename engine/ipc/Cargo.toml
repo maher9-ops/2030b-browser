@@ -1,0 +1,19 @@
+[package]
+name = "engine-ipc"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+description = "Capability-based IPC layer for Browser 2030B (Cap'n Proto model)"
+
+[lib]
+name = "engine_ipc"
+path = "src/lib.rs"
+
+# std-only by design so the crate builds in minimal/offline environments.
+# Cap'n Proto codegen is wired in behind the `capnp` feature for real builds.
+[features]
+default = []
+capnp = []
+
+[dependencies]

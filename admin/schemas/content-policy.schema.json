@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://b2030b.example/schemas/content-policy.schema.json",
+  "title": "Content Policy",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "urlAllowlist": { "type": "array", "items": { "type": "string" } },
+    "urlBlocklist": { "type": "array", "items": { "type": "string" } },
+    "useRegex": { "type": "boolean" },
+    "mimeTypeRules": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "mime": { "type": "string" },
+          "action": { "enum": ["allow", "block", "download"] }
+        },
+        "required": ["mime", "action"]
+      }
+    },
+    "downloadPolicy": { "enum": ["allow", "prompt", "block"] },
+    "clipboardPerOrigin": { "enum": ["allow", "block", "prompt"] },
+    "screenCapturePerOrigin": { "enum": ["allow", "block", "prompt"] },
+    "fileSystemAccessPerOrigin": { "enum": ["allow", "block", "prompt"] }
+  }
+}

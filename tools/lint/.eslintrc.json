@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json.schemastore.org/eslintrc",
+  "root": true,
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": 2022,
+    "sourceType": "module"
+  },
+  "plugins": ["@typescript-eslint"],
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:@typescript-eslint/recommended-requiring-type-checking"
+  ],
+  "rules": {
+    "no-console": "warn",
+    "@typescript-eslint/no-floating-promises": "error",
+    "@typescript-eslint/explicit-module-boundary-types": "error"
+  },
+  "ignorePatterns": ["**/dist/**", "**/node_modules/**", ".tooling/**"]
+}

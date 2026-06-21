@@ -1,0 +1,45 @@
+name: fuzz
+
+on:
+  schedule:
+    - cron: '0 3 * * *' # nightly
+  workflow_dispatch:
+    inputs:
+      max_total_time:
+        description: Seconds to run each target
+        default: '300'
+
+permissions:
+  contents: read
+
+jobs:
+  cargo-fuzz:
+    name: cargo-fuzz (${{ matrix.target }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        target: [net_alpn, redaction]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install nightly + cargo-fuzz
+        run: |
+          rustup toolchain install nightly --component rust-src
+          cargo +nightly install cargo-fuzz --locked
+      - uses: Swatinem/rust-cache@v2
+      - name: Seed corpus
+        run: |
+          mkdir -p tools/fuzz/corpus/${{ matrix.target }}
+          cp -n tests/fuzz-corpora/${{ matrix.target }}/* \
+            tools/fuzz/corpus/${{ matrix.target }}/ 2>/dev/null || true
+      - name: Run fuzz target
+        working-directory: tools/fuzz
+        run: |
+          cargo +nightly fuzz run ${{ matrix.target }} \
+            -- -max_total_time=${{ github.event.inputs.max_total_time || '300' }}
+      - name: Upload crashes
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: fuzz-artifacts-${{ matrix.target }}
+          path: tools/fuzz/artifacts/${{ matrix.target }}

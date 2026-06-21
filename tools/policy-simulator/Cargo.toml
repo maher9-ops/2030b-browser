@@ -1,0 +1,14 @@
+[package]
+name = "policy-simulator"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+description = "Dry-run policy simulator: b2030b policy simulate --bundle ... --scenario ..."
+
+[[bin]]
+name = "policy-simulator"
+path = "src/main.rs"
+
+[dependencies]
+policy-engine = { path = "../../admin/policy-engine" }

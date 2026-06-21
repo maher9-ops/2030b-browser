@@ -1,0 +1,13 @@
+[package]
+name = "spidermonkey-bindings"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+description = "Rust FFI bindings to SpiderMonkey (vendored, policy-selected)"
+
+[lib]
+name = "spidermonkey_bindings"
+path = "src/lib.rs"
+
+[dependencies]

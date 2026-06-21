@@ -1,0 +1,15 @@
+[package]
+name = "policy-bridge"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+description = "Bridges extension install decisions to the admin policy engine (extensions domain)"
+
+[lib]
+name = "policy_bridge"
+path = "src/lib.rs"
+
+[dependencies]
+mv4-host = { path = "../mv4-host" }
+policy-engine = { path = "../../admin/policy-engine" }

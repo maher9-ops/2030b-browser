@@ -1,0 +1,33 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "Browser 2030B",
+  "version": "0.1.0",
+  "identifier": "ai.b2030b.shell",
+  "build": {
+    "frontendDist": "../dist",
+    "devUrl": "http://localhost:1420",
+    "beforeDevCommand": "yarn dev",
+    "beforeBuildCommand": "yarn build"
+  },
+  "app": {
+    "windows": [
+      {
+        "title": "Browser 2030B",
+        "width": 1280,
+        "height": 800,
+        "minWidth": 640,
+        "minHeight": 480
+      }
+    ],
+    "security": {
+      "csp": "default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'"
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": ["app", "dmg", "deb", "rpm", "msi", "nsis"],
+    "category": "Network",
+    "shortDescription": "Browser 2030B — privacy-first, default-deny browser",
+    "longDescription": "Browser 2030B (b2030b): a memory-safe, default-deny, post-quantum-ready browser shell."
+  }
+}

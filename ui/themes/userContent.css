@@ -1,0 +1,14 @@
+/*
+ * userContent.css — user-overridable styling injected into web content
+ * (Firefox parity §UI). Opt-in only. Default-deny: empty by default so we never
+ * silently restyle the pages a user visits.
+ *
+ * Scoped @-moz-document style rules let users target specific origins once the
+ * feature is enabled in about:settings.
+ */
+
+/* Example (commented):
+@-moz-document domain("example.com") {
+  body { font-family: var(--b2030b-font-ui); }
+}
+*/

@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://b2030b.example/schemas/network.schema.json",
+  "title": "Network Policy",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "doh": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "mode": { "enum": ["off", "best-effort", "strict"] },
+        "provider": { "type": "string", "format": "uri" }
+      },
+      "required": ["mode"]
+    },
+    "doq": { "type": "boolean" },
+    "ech": { "const": true },
+    "tlsMinVersion": { "const": "1.3" },
+    "pqKemEnforcement": { "enum": ["disabled", "preferred", "required"] },
+    "allowHttp11": { "type": "boolean" },
+    "proxyChains": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "kind": { "enum": ["socks5", "https", "pac", "wpad"] },
+          "url": { "type": "string" }
+        },
+        "required": ["kind", "url"]
+      }
+    },
+    "customCaRoots": { "type": "array", "items": { "type": "string" } },
+    "mtlsClientCert": { "type": "string" },
+    "ipv6": { "enum": ["prefer", "disable", "only"] },
+    "masque": { "type": "boolean" }
+  }
+}

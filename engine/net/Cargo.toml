@@ -1,0 +1,21 @@
+[package]
+name = "engine-net"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+description = "Networking layer for Browser 2030B: HTTP/3, PQ-TLS policy, DoH/ECH, tracking protection"
+
+[lib]
+name = "engine_net"
+path = "src/lib.rs"
+
+[features]
+default = []
+# Real builds enable quinn/rustls/hickory behind these features; the std-only
+# core (policy, negotiation logic, URL classification) always compiles.
+quic = []
+rustls-pq = []
+
+[dependencies]
+engine-ipc = { path = "../ipc" }

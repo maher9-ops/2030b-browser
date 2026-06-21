@@ -1,0 +1,46 @@
+# Browser 2030B — Bazel workspace
+# Codename: b2030b
+#
+# Bazel is used as the meta-build orchestrator that ties together the Rust
+# (Cargo) crates, the TypeScript (Vite) UI bundles, and the vendored upstream
+# engine integration points (Chromium/Blink, Gecko). The `bootstrap` script
+# fetches upstream sources; this file declares the external repositories.
+
+workspace(name = "b2030b")
+
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+
+# ---------------------------------------------------------------------------
+# rules_rust — build Cargo workspace crates under Bazel for hermetic releases.
+# ---------------------------------------------------------------------------
+http_archive(
+    name = "rules_rust",
+    integrity = "sha256-placeholder-pinned-by-bootstrap",
+    urls = ["https://github.com/bazelbuild/rules_rust/releases/download/0.52.0/rules_rust-0.52.0.tar.gz"],
+)
+
+load("@rules_rust//rust:repositories.bzl", "rules_rust_dependencies", "rust_register_toolchains")
+
+rules_rust_dependencies()
+
+rust_register_toolchains(
+    edition = "2021",
+    versions = ["1.82.0"],
+)
+
+# ---------------------------------------------------------------------------
+# aspect_rules_js — TypeScript / Node UI bundles.
+# ---------------------------------------------------------------------------
+http_archive(
+    name = "aspect_rules_js",
+    integrity = "sha256-placeholder-pinned-by-bootstrap",
+    urls = ["https://github.com/aspect-build/rules_js/releases/download/v2.1.0/rules_js-v2.1.0.tar.gz"],
+)
+
+# ---------------------------------------------------------------------------
+# Upstream engine sources are fetched by `./bootstrap` (depot_tools / mach),
+# not as Bazel http_archive, because of their size (>40 GB). They are wired in
+# via local_repository once present under //third_party.
+# ---------------------------------------------------------------------------
+# local_repository(name = "chromium", path = "third_party/chromium")
+# local_repository(name = "gecko", path = "third_party/gecko")

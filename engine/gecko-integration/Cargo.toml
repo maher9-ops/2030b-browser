@@ -1,0 +1,13 @@
+[package]
+name = "gecko-integration"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+description = "Integration shim driving the vendored Gecko renderer (Fission)"
+
+[lib]
+name = "gecko_integration"
+path = "src/lib.rs"
+
+[dependencies]

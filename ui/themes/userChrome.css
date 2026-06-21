@@ -1,0 +1,16 @@
+/*
+ * userChrome.css — user-overridable browser-chrome styling (Firefox parity §UI).
+ * Loaded only when the user opts in via about:settings → Appearance → Custom CSS.
+ * Default-deny: this file is empty of overrides; the shipped chrome theme wins
+ * unless the user explicitly enables custom chrome styling.
+ */
+
+:root {
+  --b2030b-bg: light-dark(#ffffff, #1b1b1f);
+  --b2030b-fg: light-dark(#1b1b1f, #e6e6ee);
+  --b2030b-accent: light-dark(#1a73e8, #8ab4f8);
+}
+
+/* Example override (commented; enabled by the user):
+.tabstrip { --tab-height: 40px; }
+*/

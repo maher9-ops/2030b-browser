@@ -1,0 +1,67 @@
+name: lint
+
+on:
+  push:
+    branches: [main, genspark_ai_developer]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: lint-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  rust:
+    name: rustfmt + clippy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Rust toolchain
+        run: |
+          rustup show
+          rustup component add rustfmt clippy
+      - uses: Swatinem/rust-cache@v2
+      - name: rustfmt --check
+        run: cargo fmt --all -- --check
+      - name: clippy -D warnings
+        run: cargo clippy --workspace --all-targets -- -D warnings
+
+  typescript:
+    name: eslint + tsc
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Enable Corepack (yarn 4)
+        run: corepack enable
+      - name: Install
+        run: yarn install --immutable
+      - name: Typecheck
+        run: yarn typecheck
+      - name: ESLint
+        run: yarn lint
+
+  commit-hygiene:
+    name: DCO + Conventional Commits
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Verify DCO sign-off on new commits
+        run: |
+          base="${{ github.event.pull_request.base.sha || 'HEAD~1' }}"
+          missing=$(git log --no-merges --format='%H %s%n%b' "$base..HEAD" \
+            | awk '/^[0-9a-f]{40} /{h=$1} /Signed-off-by:/{ok[h]=1} END{}' >/dev/null; \
+            git log --no-merges --format='%H' "$base..HEAD" | while read -r c; do \
+              git log -1 --format='%b' "$c" | grep -q 'Signed-off-by:' || echo "$c"; \
+            done)
+          if [ -n "$missing" ]; then
+            echo "Commits missing DCO sign-off:"; echo "$missing"; exit 1
+          fi
+          echo "All commits signed off."
