@@ -13,8 +13,17 @@
 
     <StandardDirectory Id="ProgramFiles64Folder">
       <Directory Id="INSTALLFOLDER" Name="Browser 2030B">
+        <!--
+          The Tauri bundler (`cargo tauri build`) is the primary installer
+          producer and emits MSI + NSIS with embedded frontend assets directly.
+          This hand-written WiX source is a *fallback* for environments that
+          drive WiX themselves. The binary name matches `mainBinaryName` in
+          tauri.conf.json ("Browser 2030B"); the frontend `dist` is embedded
+          inside the executable by `tauri::generate_context!`, so only the
+          single .exe needs to be installed.
+        -->
         <Component Id="MainExecutable" Guid="*">
-          <File Id="b2030bExe" Source="target\release\b2030b.exe" KeyPath="yes" />
+          <File Id="b2030bExe" Source="target\release\Browser 2030B.exe" KeyPath="yes" />
         </Component>
       </Directory>
     </StandardDirectory>

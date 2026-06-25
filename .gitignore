@@ -12,6 +12,12 @@ dist/
 *.tsbuildinfo
 .yarn/cache
 .yarn/install-state.gz
+.yarn/unplugged
+.yarn/build-state.yml
+# Yarn PnP runtime artifacts are environment-specific; do not track them.
+# (yarn.lock IS tracked, for reproducible installs.)
+.pnp.cjs
+.pnp.loader.mjs
 
 # Bazel
 bazel-*

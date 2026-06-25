@@ -4,8 +4,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc -p tsconfig.json && vite build",
+    "dev": "yarn workspace @b2030b/command-palette build && vite",
+    "build": "yarn workspace @b2030b/command-palette build && tsc -p tsconfig.json && vite build",
+    "typecheck": "yarn workspace @b2030b/command-palette build && tsc -p tsconfig.json --noEmit",
     "preview": "vite preview",
     "test": "vitest run",
     "lint": "eslint src --ext .ts"
@@ -14,6 +15,7 @@
     "@b2030b/command-palette": "workspace:*"
   },
   "devDependencies": {
+    "@types/node": "^22.0.0",
     "typescript": "^5.6.0",
     "vite": "^5.4.0",
     "vitest": "^2.0.0"

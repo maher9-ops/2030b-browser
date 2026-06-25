@@ -28,6 +28,16 @@ members = [
     "tools/policy-simulator",
     "tests/integration",
 ]
+# The Tauri desktop host (ui/shell-desktop/src-tauri) is intentionally EXCLUDED
+# from the virtual workspace: it pulls a large native dependency tree
+# (webkit2gtk / WebView2, wry, …) that is unavailable in the offline CI sandbox.
+# It is self-contained and built on demand via `cargo tauri build` (or
+# `./build release`) on a machine with the Tauri prerequisites installed. This
+# `exclude` makes the boundary explicit so the crate is never accidentally
+# vendored into the offline `cargo build --workspace`.
+exclude = [
+    "ui/shell-desktop/src-tauri",
+]
 
 [workspace.package]
 version = "0.1.0"
