@@ -127,6 +127,7 @@ Full details in [`docs/00-architecture.md`](docs/00-architecture.md).
 | [09-deployment](docs/09-deployment.md) | Packaging & distribution per platform |
 | [10-licensing-and-ethics](docs/10-licensing-and-ethics.md) | ML-1.0 obligations + Part D dependency compatibility |
 | [11-windows-build-guide](docs/11-windows-build-guide.md) | Step-by-step Windows setup to build & export every artifact |
+| [12-nextgen-ui](docs/12-nextgen-ui.md) | The 2030B desktop shell: UI/UX decisions, customisation, blank-window fix |
 
 ## Channels
 

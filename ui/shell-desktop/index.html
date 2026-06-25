@@ -1,18 +1,31 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="system">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- Default-deny CSP: no inline script, no remote origins. -->
+    <!--
+      CSP note: the authoritative policy is set in tauri.conf.json (app.security.csp),
+      which Tauri injects at runtime for the bundled app. We keep a matching policy
+      here so `vite dev` / `vite preview` (plain browser) behave identically.
+      'unsafe-inline' for style-src is required for our CSS-variable theme switching
+      and just-in-time inline styles; scripts remain 'self' only (no inline JS).
+    -->
     <meta
       http-equiv="Content-Security-Policy"
-      content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'"
+      content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' ipc: http://ipc.localhost; worker-src 'self' blob:"
     />
     <title>Browser 2030B</title>
-    <link rel="stylesheet" href="/src/main.css" />
+    <link rel="stylesheet" href="./src/main.css" />
   </head>
   <body>
-    <div id="app"></div>
-    <script type="module" src="/src/main.ts"></script>
+    <div id="app" aria-busy="true">
+      <!-- First-paint splash so the window is never visually empty while the
+           module graph boots. Replaced by the shell on mount. -->
+      <div id="boot-splash">
+        <div class="boot-mark">2030<span>B</span></div>
+        <div class="boot-hint">starting&hellip;</div>
+      </div>
+    </div>
+    <script type="module" src="./src/main.ts"></script>
   </body>
 </html>

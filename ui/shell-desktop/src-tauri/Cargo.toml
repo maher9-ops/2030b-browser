@@ -15,6 +15,10 @@ crate-type = ["staticlib", "cdylib", "rlib"]
 
 [build-dependencies]
 tauri-build = { version = "2", features = [] }
+# Used by build.rs to (re)generate a valid single-image icons/icon.ico that
+# Windows' rc.exe accepts (single entry, ICONDIRENTRY reserved = 0).
+ico = "0.3"
+png = "0.17"
 
 [dependencies]
 tauri = { version = "2", features = [] }
